@@ -1,0 +1,130 @@
+<!--  
+  - COPYRIGHT (C) 2015 Sreenidhi Pundi Muralidharan. All Rights Reserved.
+  - Solves CS 298 Project Work - On-the-fly Map Generator for OSM Data using WebGL.
+  - @author Sreenidhi Pundi Muralidharan
+  - @version 1.01 Dec 15, 2015
+  - This HTML file calls several scripts, has CSS styles for the map and has the WebGL shader definitions.
+--> 
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title> Open Street Map</title>
+  <style type="text/css" media="screen">
+    * 
+    {
+      padding: 0;
+      margin: 0;
+      border: none;
+    }
+    /* make the body fill the window */
+    html, body 
+    {
+      margin: 0px;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    /* make any canvas fill its container */
+    #map-canvas 
+    {
+      width: 100%;
+      height: 100%;
+    }
+    .controls 
+    {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+      width: 100px;
+    }
+    .controls input 
+    {
+      display: block;
+      background: #000;
+      color: #FFF;
+      margin-bottom: 20px;
+      width: 50px;
+    }
+    .pan 
+    {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      bottom: 20px;
+      left: 20px;
+    }
+    .pan input 
+    {
+      background: #000;
+      color: #FFF;
+      width: 30px;
+    }
+    .pan #pan-left 
+    {
+      margin: 0 18px 0 0;
+    }
+    .pan #pan-right 
+    {
+      margin: 0 0 0 18px;
+    }
+    .pan #pan-top 
+    {
+      margin: 0 35px 20px 35px;
+    }
+    .pan #pan-bottom 
+    {
+      margin: 20px 35px 0 35px;
+    }
+  </style>
+	<script id="pointVertexShader" type="x-shader/x-vertex">
+		attribute vec4 worldCoord;
+    attribute vec3 coordinates;
+    attribute vec4 aVertexColor;
+    
+		uniform mat4 mapMatrix;
+
+    varying vec4 vColor;
+
+		void main() 
+    {
+			// transform world coordinate by matrix uniform variable
+      
+			gl_Position = mapMatrix * worldCoord;
+      //gl_Position = vec4(coordinates, 1.0);
+      vColor = aVertexColor; //varying colors for each vertex. Can change shades later to transparent
+
+		}
+	</script> 
+		
+	<script id="pointFragmentShader" type="x-shader/x-fragment">
+		precision mediump float;
+    
+    varying vec4 vColor;
+    
+		void main() 
+    {
+      gl_FragColor = vColor;
+		}
+  </script>
+</head>
+<body>
+  <canvas id="map-canvas"></canvas>
+  <div class="controls">
+    <input type="button" name="plus" value="+" id="plus">
+    <input type="button" name="minus" value="-" id="minus">
+  </div>
+  <div class="pan">
+    <input type="button" name="pan-top" value="^" id="pan-top">
+    <input type="button" name="pan-left" value="&lt;" id="pan-left">
+    <input type="button" name="pan-right" value="&gt;" id="pan-right">
+    <input type="button" name="pan-bottom" value="v" id="pan-bottom">   
+  </div>
+  
+  <script src="js/jquery_1.11.2.js" type="text/javascript" charset="utf-8"></script>  
+  <script src="js/webgl_debug.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/webgl_console.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/data.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/points.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/canvas.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>
